@@ -7,16 +7,12 @@
     <title>Projecte Kanban - Alejandro / Isam</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
-    <script>
-        // Objeto columna iniciada
-        // crea una etiqueta div con un boton con el metodo añadir tarjeta
-        // boton | Titulo
-
-
-    </script>
+    
     <div class="container-fluid">
         <div class="card" style="width: 20rem;">
             <div class="card-body">
@@ -24,13 +20,17 @@
                     <!-- TITULO -->
                     <div class="d-grid gap-4 d-md-flex justify-content-md-start">
                         <h3>Columna</h3>
-                        <a href="" class="btn btn-primary">+</a>
+                        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">+</button> -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">+</button>
                     </div>
                     <!-- CUERPO DONDE SE GENERAN LAS TAREAS -->
                     <br>
-                    <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
+                    <div id="cos">
+
+                    </div>
+                    <!-- <div id="tarea" class="card text-bg-primary mb-3" style="max-width: 18rem;">
                         <div class="card-body">
-                          <h5 class="card-title">title</h5>
+                          <h5 id="tarea-titulo" class="card-title"></h5>
                           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                         </div>
                     </div>
@@ -39,10 +39,85 @@
                           <h5 class="card-title">Primary card title</h5>
                           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                         </div>
-                    </div>                      
+                    </div>                       -->
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir tarea</h1>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form action="index.php" id="formulario" method="post" >
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Titulo</label>
+                    <input type="text" class="form-control" id="campoTitulo" name="titulo" placeholder="Nuevo titulo">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Descripción</label>
+                    <textarea class="form-control" id="campoDescripcion" name="titulo" rows="4"></textarea>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" onclick="enviaTextos()" data-bs-dismiss="modal" class="btn btn-primary">Añadir tarea</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <script>
+        // Objeto columna iniciada
+        // crea una etiqueta div con un boton con el metodo añadir tarjeta
+        // boton | Titulo
+
+        //clase tarea
+        class Tarea{
+            constructor(id,titulo, descripcion){
+                this.id = id;
+                this.titulo = titulo;
+                this.descripcion = descripcion;
+            }
+        }
+
+
+        function creaTarea(id, titulo, descr){
+            tarea = new Tarea(id,titulo,descr);
+            tareas.add(tarea);
+        }
+
+        const tareas = new Set();
+
+        function actualizarTareas(){
+            document.getElementById("cos").innerHTML = "";
+            var n_tarea = 1;
+            for(let tarea of tareas){
+                n_tarea += 1;
+                const docPadre = document.getElementById("cos");
+                const string = "<div id='tarea' class='card text-bg-primary mb-3' style='max-width: 18rem;'><div class='card-body'><h5 id='tarea-titulo' class='card-title'>" + tarea.titulo + "</h5><p class='card-text'>"+ tarea.descripcion + "</p></div></div>";
+                docPadre.innerHTML += string;
+            }
+        }
+        
+
+        function enviaTextos(){
+            var id = tareas.size + 1;
+            var titulo = document.getElementById("campoTitulo").value;
+            var descripcion = document.getElementById("campoDescripcion").value;
+
+            creaTarea(id, titulo, descripcion);
+            actualizarTareas();
+            
+        }
+
+    </script>
 </body>
 </html>
