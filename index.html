@@ -45,6 +45,7 @@
         </div>
     </div>
 
+    <p id="demo"></p>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -91,10 +92,10 @@
 
         function creaTarea(id, titulo, descr){
             tarea = new Tarea(id,titulo,descr);
-            tareas.add(tarea);
+            tareas.push(tarea);
         }
 
-        const tareas = new Set();
+        const tareas = [];
 
         function actualizarTareas(){
             document.getElementById("cos").innerHTML = "";
@@ -102,9 +103,11 @@
             for(let tarea of tareas){
                 n_tarea += 1;
                 const docPadre = document.getElementById("cos");
-                const string = "<div id='tarea' class='card text-bg-primary mb-3' style='max-width: 18rem;'><div class='card-body'><h5 id='tarea-titulo' class='card-title'>" + tarea.titulo + "</h5><p class='card-text'>"+ tarea.descripcion + "</p></div></div>";
+                const string = "<div id='tarea' class='card text-bg-primary mb-3' style='max-width: 18rem;'><div class='card-body'><div class='d-grid gap-2 d-md-flex justify-content'><h5 id='tarea-titulo' class='card-title'>" + tarea.titulo + "</h5><button type='button' class='btn-close' aria-label='Close'></button></div><p class='card-text'>"+ tarea.descripcion + "</p></div></div>";
                 docPadre.innerHTML += string;
             }
+
+            
         }
         
 
@@ -117,6 +120,8 @@
             actualizarTareas();
             
         }
+
+        
 
     </script>
 </body>
