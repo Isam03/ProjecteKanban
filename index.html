@@ -32,8 +32,13 @@
 
 <body>
 
-  <div class="container-fluid">
+  <div class="container">
     <div id="alertas"></div>
+    <br>
+    <!-- Boton panel de usuarios -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-people-fill"></i>Usuarios</button>
+    </div>
     <div class="card" style="width: 20rem;">
       <div class="card-body">
         <div class="card-title">
@@ -61,6 +66,26 @@
                         </div>
                     </div>                       -->
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offcanvas -->
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <button class="btn btn-primary me-md-2" type="button" data-bs-toggle="modal" data-bs-target="#userModal">+</button>
+      </div>
+      <br>
+      <!-- CUERPO DONDE SE GENERAN LOS USUARIOS -->
+      <br>
+      <div id="persones">
+
       </div>
     </div>
   </div>
@@ -120,6 +145,41 @@
     </div>
   </div>
 
+  <!-- Modal usuarios -->
+
+  <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="userModalLabel>Añadir tarea</h1>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <form action="index.php" id="formulario" method="post">
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="campoNombre" name="nombre" placeholder="Nombre">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Apellido</label>
+                <textarea class="form-control" id="campoApellido" name="apellido" rows="4"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Nombre de usuario</label>
+                <textarea class="form-control" id="campoUsuario" name="usuario" rows="4"></textarea>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" onclick="enviaUsuari()" data-bs-dismiss="modal" class="btn btn-primary">Añadir
+            tarea</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Objeto columna iniciada
     // crea una etiqueta div con un boton con el metodo añadir tarjeta
@@ -138,7 +198,18 @@
       }
     }
 
+    class Persona {
+      constructor(id, nombre, apellido, usuario) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.nombreUsuario = usuario;
+      }
+    }
+
+
     let tareas = [];
+    let responsables = [];
 
     if (typeof (Storage) !== "undefined") {
         tareas = JSON.parse(localStorage.getItem("tareas") || "[]");
@@ -171,6 +242,12 @@
       tareas.push(tarea);
     }
 
+    function crearUsuario(id, nombre, apellido, usuario){
+      resp = new Persona(id, nombre, apellido, usuario);
+
+      responsables.push(resp);
+    }
+
     function actualizarTareas() {
       document.getElementById("cos").innerHTML = "";
       var n_tarea = 1;
@@ -185,6 +262,25 @@
 
       añadirTareaLocalStorage(tareas);
 
+    }
+
+    function actualizarUsuarios(){
+      document.getElementById("persones").innerHTML = "";
+      for (let persona of responsables){
+        const raizUsuarios = document.getElementById("persones");
+
+        let string = "<div class='card'><div class='card-body'><h5 class='card-title'>" + persona.nombre + " " + persona.apellido "</h5><h6 class='card-subtitle mb-2 text-muted'>" + persona.nombreUsuario + "</h6></div></div>";
+      }
+    }
+
+    function enviaUsuario(){
+      var id = uuidv4();
+      var nombre = document.getElementById("campoNombre").value;
+      var apellido = document.getElementById("campoApellido").value;
+      var usuario = document.getElementById("campoUsuario").value;
+
+      crearUsuario(id, nombre, apellido, usuario);
+      actualizarUsuarios();
     }
 
 
