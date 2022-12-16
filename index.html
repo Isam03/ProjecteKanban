@@ -23,6 +23,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
     integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css" integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <style>
     .white {
       color: white;
@@ -53,18 +58,6 @@
           <div id="cos">
 
           </div>
-          <!-- <div id="tarea" class="card text-bg-primary mb-3" style="max-width: 18rem;">
-                        <div class="card-body">
-                          <h5 id="tarea-titulo" class="card-title"></h5>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                    </div>
-                    <div class="card text-bg-danger mb-3" style="max-width: 18rem;">
-                        <div class="card-body">
-                          <h5 class="card-title">Primary card title</h5>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                    </div>                       -->
         </div>
       </div>
     </div>
@@ -74,7 +67,7 @@
 
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
+      <h5 class="offcanvas-title" id="offcanvasRightLabel">Lista de personas</h5>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -84,7 +77,7 @@
       <br>
       <!-- CUERPO DONDE SE GENERAN LOS USUARIOS -->
       <br>
-      <div id="persones">
+      <div id="personas">
 
       </div>
     </div>
@@ -92,7 +85,7 @@
 
   
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" onload="actualizarListaPersonasDOM">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -123,7 +116,9 @@
               </div>
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Assignar a: </label>
-                <input type="text" class="form-control" id="campoResponsable" name="responsable" placeholder="Usuario responsable">
+                <select id="campoResponsable" multiple placeholder="Escribe el nombre de usuario...">
+                </select>
+                <!-- <input type="text" class="form-control" id="campoResponsable" name="responsable" placeholder="Usuario responsable"> -->
               </div>
               <select class="form-select" id="campoPrioridad" aria-label="Default select example">
                 <option selected>Prioridad</option>
@@ -151,29 +146,89 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="userModalLabel>Añadir tarea</h1>
+          <h1 class="modal-title fs-5" id="userModalLabel">Añadir tarea</h1>
         </div>
         <div class="modal-body">
           <div class="container">
             <form action="index.php" id="formulario" method="post">
-              <div class="mb-3">
+              <div class="mb-2">
                 <label for="exampleFormControlInput1" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="campoNombre" name="nombre" placeholder="Nombre">
               </div>
-              <div class="mb-3">
+              <div>
                 <label for="exampleFormControlTextarea1" class="form-label">Apellido</label>
-                <textarea class="form-control" id="campoApellido" name="apellido" rows="4"></textarea>
+                <input type="text" class="form-control" id="campoApellido" name="apellido" ></input>
               </div>
-              <div class="mb-3">
+              <div >
                 <label for="exampleFormControlTextarea1" class="form-label">Nombre de usuario</label>
-                <textarea class="form-control" id="campoUsuario" name="usuario" rows="4"></textarea>
+                <input type="text" class="form-control" id="campoUsuario" name="usuario" ></input>
               </div>
             </form>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" onclick="enviaUsuari()" data-bs-dismiss="modal" class="btn btn-primary">Añadir
+          <button type="button" onclick="enviaUsuario()" data-bs-dismiss="modal" class="btn btn-primary">Añadir
+            usuario</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal editar tareas -->
+
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true" onload="actualizarListaPersonasDOM">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editModalLabel">Actualizar tarea</h1>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <form action="index.php" id="formulario" method="post">
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Titulo</label>
+                <input type="text" class="form-control" id="editCampoTitulo" name="titulo" placeholder="Nuevo titulo">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción</label>
+                <textarea class="form-control" id="editCampoDescripcion" name="titulo" rows="4"></textarea>
+              </div>
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col">
+                    <label for="exampleFormControlInput1" class="form-label">Fecha de inicio</label>
+                    <input type="date" class="form-control" id="editCampoFechaInicio" name="fecha_inicio">
+                  </div>
+                  <div class="col">
+                    <label for="exampleFormControlInput1" class="form-label">Fecha de finalizacion</label>
+                    <input type="date" class="form-control" id="editCampoFechaFinal" name="fecha_final">
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label id="responsablesAsignados"class="form-label">Responsables asignados:</label>
+                <!-- mostrar responsables aqui -->
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Assignar a: </label>
+                <select id="editCampoResponsable" multiple placeholder="Escribe el nombre de usuario...">
+                </select>
+              </div>
+              <select class="form-select" id="editCampoPrioridad" aria-label="Default select example">
+                <option selected>Prioridad</option>
+                <option value="urgente">Urgente</option>
+                <option value="importante">Importante</option>
+                <option value="alta">Alta</option>
+                <option value="media">Media</option>
+                <option value="baja">Baja</option>6
+              </select>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" onclick="enviaTextos()" data-bs-dismiss="modal" class="btn btn-primary">Actualizar
             tarea</button>
         </div>
       </div>
@@ -186,7 +241,7 @@
     // boton | Titulo
     //clase tarea
     class Tarea {
-      constructor(id, titulo, titulo_corto, descripcion, color, fecha_creacion, fecha_finalizacion, responsable) {
+      constructor(id, titulo, titulo_corto, descripcion, color, fecha_creacion, fecha_finalizacion, responsables) {
         this.id = id;
         this.titulo = titulo;
         this.titulo_corto = titulo_corto;
@@ -194,7 +249,7 @@
         this.color = color;
         this.fecha_creacion = fecha_creacion;
         this.fecha_finalizacion = fecha_finalizacion;
-        this.responsable = responsable;
+        this.responsables = responsables;
       }
     }
 
@@ -207,20 +262,71 @@
       }
     }
 
+    
+
+    function comprovarPersona(id){
+        if(this.id == id){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+
 
     let tareas = [];
     let responsables = [];
 
+
+
+
+    $(function () {
+      $("#campoResponsable").selectize({plugins: ['remove_button']});
+      $("#editCampoResponsable").selectize({plugins: ['remove_button']});
+      
+      
+    });
+
+
     if (typeof (Storage) !== "undefined") {
         tareas = JSON.parse(localStorage.getItem("tareas") || "[]");
+        const docPadre = document.getElementById("cos");
+
         for (let tarea of tareas) {
-          const docPadre = document.getElementById("cos");
+          
           console.log("Fecha inicio: " + tarea.fecha_creacion);
           console.log("Fecha final: " + tarea.fecha_finalizacion);
-          console.log("Responsable: " + tarea.responsable);
-          let string = "<div id='tarea' class='card text-bg-" + tarea.color + " mb-3' style='max-width: 18rem;'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 id='tarea-titulo' class='card-title' data-bs-toggle='tooltip' data-bs-placement='top' title='" + tarea.titulo + "'>" + tarea.titulo_corto + "</h5></div><div class='col'><button type='button' class='btn btn-outline-light' onclick='eliminaTarea(\"" + tarea.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button></div></div><p class='card-text'>" + tarea.descripcion + "</p><span class='badge rounded-pill bg-light text-dark'>" + tarea.responsable + "</span></div></div>";
+
+          let string = "<div id='tarea' class='card text-bg-" + tarea.color + " mb-3' style='max-width: 18rem;'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 id='tarea-titulo' class='card-title' data-bs-toggle='tooltip' data-bs-placement='top' title='" + tarea.titulo + "'>" + tarea.titulo_corto + "</h5></div><div class='col'><button type='button' class='btn btn-outline-light' onclick='eliminaTarea(\"" + tarea.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button><button type='button' class='btn btn-outline-light ms-2' data-bs-toggle='modal' data-bs-target='#editModal' onclick='editaUsuario(\"" + tarea.id + "\")' ><i class='fa-regular fa-pen-to-square' aria-label='delete'></i></button></div></div><p class='card-text'>" + tarea.descripcion + "</p>";
+          
+          if(tarea.responsables.length > 0){
+            for(let i = 0; i < tarea.responsables.length; i++){
+              string += "<span class='badge rounded-pill bg-light text-dark me-2'>" + tarea.responsables[i].nombre + " " + tarea.responsables[i].apellido + "</span>";
+            }
+
+            string += "</div></div><div class='card-footer'><div class='row row-cols-2'><div class='col'><i class='fa-regular fa-calendar'></i>" + " " + tarea.fecha_creacion + "</div><div class='col'><i class='fa-regular fa-calendar-check'></i>" + " " + tarea.fecha_finalizacion + "</div></div></div>";
+          }
+          else{
+
+            string += "</div></div><div class='card-footer'><div class='row row-cols-2'><div class='col'><i class='fa-regular fa-calendar'></i>" + " " + tarea.fecha_creacion + "</div><div class='col'><i class='fa-regular fa-calendar-check'></i>" + " " + tarea.fecha_finalizacion + "</div></div></div>";
+          }
+
+          console.log("tarea: " + Object.toString(tarea.responsables));
+          console.dir(tarea.responsables);
+          console.table(tarea.responsables, ['nombre', 'apellido']);
           docPadre.innerHTML += string;
           
+        }
+      } else {
+        document.write("<div class='alert alert-danger' role='alert'>El navegador no permet localStorage, per tant es incompatible</div>")
+    }
+
+    if (typeof (Storage) !== "undefined") {
+        responsables = JSON.parse(localStorage.getItem("personas") || "[]");
+        for (let persona of responsables) {
+          const raizUsuarios = document.getElementById("personas");
+          let string = "<div class='card mb-3'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 class='card-title'>" + persona.nombre + " " + persona.apellido + "</h5></div><div class='col d-grid gap-2 d-md-flex justify-content-md-end'><button type='button' class='btn btn-light' onclick='eliminaUsuario(\"" + persona.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button></div></div><h6 class='card-subtitle mb-2 text-muted'>" + persona.nombreUsuario + "</h6></div></div><br>";
+          raizUsuarios.innerHTML += string;
         }
       } else {
         document.write("<div class='alert alert-danger' role='alert'>El navegador no permet localStorage, per tant es incompatible</div>")
@@ -236,8 +342,54 @@
       actualizarTareas();
     }
 
-    function creaTarea(id, titulo, titulo_corto, descr, color, fecha_inicio, fecha_final, responsable) {
-      tarea = new Tarea(id, titulo, titulo_corto, descr, color, fecha_inicio, fecha_final, responsable);
+    function eliminaUsuario(id){
+      responsables = responsables.filter(resp => {
+        if (resp.id != id){
+          return resp;
+        }
+      })
+      actualizarUsuarios();
+    }
+
+    function editaUsuario(id){
+      
+
+      for (let tarea of tareas){
+        if(tarea.id == id){
+          document.getElementById("editCampoTitulo").value = tarea.titulo;
+          document.getElementById("editCampoDescripcion").value = tarea.descripcion;
+          document.getElementById("editCampoFechaInicio").value = tarea.fecha_creacion;
+          document.getElementById("editCampoFechaFinal").value = tarea.fecha_finalizacion;
+          let selectedItems = tarea.responsables;
+
+          for(let i = 0; i < selectedItems.length; i++){
+              var z = document.createElement("button");
+              z.setAttribute("value", selectedItems[i].id);
+              z.setAttribute("class", "btn btn-primary");
+              var t = document.createTextNode(selectedItems[i].nombreUsuario);
+              var x = document.createElement("br");
+              z.appendChild(t);
+
+              document.getElementById("responsablesAsignados").appendChild(z);
+            }
+        }
+      }
+
+      let responsableActualizado = [];
+          for(let opcion of document.getElementById('editCampoResponsable').options){
+
+            for(let i = 0; i < responsables.length; i++){
+              if(opcion.selected){
+                if(opcion.value == responsables[i].id){
+                  responsableActualizado.push(responsables[i]);
+                }
+              }
+            }
+          }
+    }
+
+    function creaTarea(id, titulo, titulo_corto, descr, color, fecha_inicio, fecha_final, responsables) {
+      tarea = new Tarea(id, titulo, titulo_corto, descr, color, fecha_inicio, fecha_final, responsables);
 
       tareas.push(tarea);
     }
@@ -248,29 +400,18 @@
       responsables.push(resp);
     }
 
-    function actualizarTareas() {
-      document.getElementById("cos").innerHTML = "";
-      var n_tarea = 1;
-      for (let tarea of tareas) {
-        n_tarea += 1;
 
-        const docPadre = document.getElementById("cos");
-
-        let string = "<div id='tarea' class='card text-bg-" + tarea.color + " mb-3' style='max-width: 18rem;'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 id='tarea-titulo' class='card-title' data-bs-toggle='tooltip' data-bs-placement='top' title='" + tarea.titulo + "'>" + tarea.titulo_corto + "</h5></div><div class='col'><button type='button' class='btn btn-outline-light' onclick='eliminaTarea(\"" + tarea.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button></div></div><p class='card-text'>" + tarea.descripcion + "</p><span class='badge rounded-pill bg-light text-dark'>" + tarea.responsable + "</span></div></div>";
-        docPadre.innerHTML += string;
-      }
-
-      añadirTareaLocalStorage(tareas);
-
-    }
 
     function actualizarUsuarios(){
-      document.getElementById("persones").innerHTML = "";
+      document.getElementById("personas").innerHTML = "";
       for (let persona of responsables){
-        const raizUsuarios = document.getElementById("persones");
+        const raizUsuarios = document.getElementById("personas");
 
-        let string = "<div class='card'><div class='card-body'><h5 class='card-title'>" + persona.nombre + " " + persona.apellido "</h5><h6 class='card-subtitle mb-2 text-muted'>" + persona.nombreUsuario + "</h6></div></div>";
+        let string = "<div class='card mb-3'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 class='card-title'>" + persona.nombre + " " + persona.apellido + "</h5></div><div class='col d-grid gap-2 d-md-flex justify-content-md-end'><button type='button' class='btn btn-light' onclick='eliminaUsuario(\"" + persona.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button></div></div><h6 class='card-subtitle mb-2 text-muted'>" + persona.nombreUsuario + "</h6></div></div>";
+        raizUsuarios.innerHTML += string;
       }
+
+      añadirPersonaLocalStorage(responsables);
     }
 
     function enviaUsuario(){
@@ -292,9 +433,18 @@
       var prioridad = document.getElementById("campoPrioridad").value;
       var fecha_inicio = document.getElementById("campoFechaInicio").value;
       var fecha_final = document.getElementById("campoFechaFinal").value;
-      var responsable = document.getElementById("campoResponsable").value;
+      // var responsable = document.getElementById("campoResponsable").value;
+      var responsable = [];
+      for(let opcion of document.getElementById('campoResponsable').options){
 
-      console.log(prioridad);
+        for(let i = 0; i < responsables.length; i++){
+          if(opcion.selected){
+            if(opcion.value == responsables[i].id){
+            responsable.push(responsables[i]);
+          }
+          }
+        }
+      }
 
       if(prioridad == "urgente"){
         color = "warning";
@@ -333,6 +483,14 @@
       }
     }
 
+    function añadirPersonaLocalStorage(value) {
+      if (typeof (Storage) != "undefined") {
+        window.localStorage.setItem("personas", JSON.stringify(value));
+      }else{
+        document.write("<div class='alert alert-danger' role='alert'>El navegador no permet localStorage, per tant es incompatible</div>")
+      }
+    }
+
     // function obtenerTareasGuardadas() {
       
     // }
@@ -344,6 +502,51 @@
       });
     }
 
+    function actualizarListaPersonasDOM(){
+
+      let seleccioPersones = document.getElementById("campoResponsable").options;
+      for(let persona of responsables){
+        let opc = document.createElement("option");
+
+        opc.class = "item";
+        opc.value = persona.id;
+        opc.text = persona.nombreUsuario;
+
+        seleccioPersones.add(opc);
+
+        
+      }
+    }
+
+    actualizarListaPersonasDOM();
+
+    function actualizarTareas() {
+        document.getElementById("cos").innerHTML = "";
+        const docPadre = document.getElementById("cos");
+
+      
+        for (let tarea of tareas) {
+
+          
+          let string = "<div id='tarea' class='card text-bg-" + tarea.color + " mb-3' style='max-width: 18rem;'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 id='tarea-titulo' class='card-title' data-bs-toggle='tooltip' data-bs-placement='top' title='" + tarea.titulo + "'>" + tarea.titulo_corto + "</h5></div><div class='col'><button type='button' class='btn btn-outline-light' onclick='eliminaTarea(\"" + tarea.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button><button type='button' class='btn btn-outline-light ms-2' data-bs-toggle='modal' data-bs-target='#editModal' onclick='editaUsuario(\"" + tarea.id + "\")' ><i class='fa-regular fa-pen-to-square' aria-label='delete'></i></button></div></div><p class='card-text'>" + tarea.descripcion + "</p>";
+          if(tarea.responsables.length > 0){
+            for(let i = 0; i < tarea.responsables.length; i++){
+              string += "<span class='badge rounded-pill bg-light text-dark me-2'>" + tarea.responsables[i].nombre + " " + tarea.responsables[i].apellido + "</span>";
+            }
+
+            string += "</div></div><div class='card-footer'><div class='row row-cols-2'><div class='col'><i class='fa-regular fa-calendar'></i>" + " " + tarea.fecha_creacion + "</div><div class='col'><i class='fa-regular fa-calendar-check'></i>" + " " + tarea.fecha_finalizacion + "</div></div></div>";
+          }
+          else{
+            string += "</div></div><div class='card-footer'><div class='row row-cols-2'><div class='col'><i class='fa-regular fa-calendar'></i>" + " " + tarea.fecha_creacion + "</div><div class='col'><i class='fa-regular fa-calendar-check'></i>" + " " + tarea.fecha_finalizacion + "</div></div></div>";
+          }
+
+          docPadre.innerHTML += string;
+        }
+      
+      añadirTareaLocalStorage(tareas);
+      actualizarListaPersonasDOM()
+
+    }
   </script>
 </body>
 
