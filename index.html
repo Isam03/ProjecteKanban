@@ -192,7 +192,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="userModalLabel">Añadir usuario</h1>
+          <h1 class="modal-title fs-5" id="userModalLabel">Añadir tarea</h1>
         </div>
         <div class="modal-body">
           <div class="container">
@@ -344,7 +344,7 @@
           console.log("Fecha inicio: " + tarea.fecha_creacion);
           console.log("Fecha final: " + tarea.fecha_finalizacion);
 
-          let string = "<div id='tarea' class='card text-bg-" + tarea.color + " mb-3' style='max-width: 18rem;'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 id='tarea-titulo' class='card-title' data-bs-toggle='tooltip' data-bs-placement='top' title='" + tarea.titulo + "'>" + tarea.titulo_corto + "</h5></div><div class='col'><button type='button' class='btn btn-outline-light' onclick='eliminaTarea(\"" + tarea.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button><button type='button' class='btn btn-outline-light ms-2' data-bs-toggle='modal' data-bs-target='#editModal' onclick=''><i class='fa-regular fa-pen-to-square' aria-label='delete'></i></button></div></div><p class='card-text'>" + tarea.descripcion + "</p>";
+          let string = "<div id='tarea' class='card text-bg-" + tarea.color + " mb-3' style='max-width: 18rem;'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 id='tarea-titulo' class='card-title' data-bs-toggle='tooltip' data-bs-placement='top' title='" + tarea.titulo + "'>" + tarea.titulo_corto + "</h5></div><div class='col'><button type='button' class='btn btn-outline-light' onclick='eliminaTarea(\"" + tarea.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button><button type='button' class='btn btn-outline-light ms-2' data-bs-toggle='modal' data-bs-target='#editModal' onclick='' disabled><i class='fa-regular fa-pen-to-square' aria-label='delete'></i></button></div></div><p class='card-text'>" + tarea.descripcion + "</p>";
           
           if(tarea.responsables.length > 0){
             for(let i = 0; i < tarea.responsables.length; i++){
@@ -635,7 +635,7 @@
         for (let tarea of tareas) {
 
           
-          let string = "<div id='tarea' class='card text-bg-" + tarea.color + " mb-3' style='max-width: 18rem;'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 id='tarea-titulo' class='card-title' data-bs-toggle='tooltip' data-bs-placement='top' title='" + tarea.titulo + "'>" + tarea.titulo_corto + "</h5></div><div class='col'><button type='button' class='btn btn-outline-light' onclick='eliminaTarea(\"" + tarea.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button><button type='button' class='btn btn-outline-light ms-2' data-bs-toggle='modal' data-bs-target='#editModal' onclick=''><i class='fa-regular fa-pen-to-square' aria-label='delete'></i></button></div></div><p class='card-text'>" + tarea.descripcion + "</p>";
+          let string = "<div id='tarea' class='card text-bg-" + tarea.color + " mb-3' style='max-width: 18rem;'><div class='card-body'><div class='container-fluid'><div class='row row-cols-2'><div class='col'><h5 id='tarea-titulo' class='card-title' data-bs-toggle='tooltip' data-bs-placement='top' title='" + tarea.titulo + "'>" + tarea.titulo_corto + "</h5></div><div class='col'><button type='button' class='btn btn-outline-light' onclick='eliminaTarea(\"" + tarea.id + "\")' ><i class='fa-regular fa-trash-can' aria-label='delete'></i></button><button type='button' class='btn btn-outline-light ms-2' data-bs-toggle='modal' data-bs-target='#editModal' onclick='' disabled><i class='fa-regular fa-pen-to-square' aria-label='delete'></i></button></div></div><p class='card-text'>" + tarea.descripcion + "</p>";
           if(tarea.responsables.length > 0){
             for(let i = 0; i < tarea.responsables.length; i++){
               string += "<span class='badge rounded-pill bg-light text-dark me-2'>" + tarea.responsables[i].nombre + " " + tarea.responsables[i].apellido + "</span>";
