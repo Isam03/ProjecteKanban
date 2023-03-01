@@ -3,31 +3,28 @@ const mongoose = require("mongoose");
 
 const TascaSchema = new mongoose.Schema({
     titulo: {
-        type: String,
-        required: true
+        type: String
     },
     titulo_corto: {
-        type: String,
-        required: true
+        type: String
     },
     descripcion: {
-        type: String,
-        required: true
+        type: String
     },
     color: {
-        type: String,
-        required: true
+        type: String
     },
     fecha_creacion: {
-        type: String,
-        required: true
+        type: String
     },
     fecha_finalizacion: {
-        type: String,
-        required: true
+        type: String
     },
     responsable: {
         type: Array
+    },
+    posicion: {
+        type: String
     }
 
 });

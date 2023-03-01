@@ -32,7 +32,8 @@ app.post('/api', (req, res) => {
     color: req.body.color,
     fecha_creacion: req.body.fecha_creacion,
     fecha_finalizacion: req.body.fecha_finalizacion,
-    responsable: req.body.responsable
+    responsable: req.body.responsable,
+    posicion: req.body.posicion
   };
 
   tasques.push(newTasca);

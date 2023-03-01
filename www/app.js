@@ -24,6 +24,7 @@ const campoNombre = document.getElementById("campoNombre");
 const campoApellido = document.getElementById("campoApellido");
 const campoUsuario = document.getElementById("campoUsuario");
 var idActual = "";
+var numeroPos = "";
 
 llistarResponsables();
 
@@ -31,7 +32,9 @@ llistarTasques();
 
 let botoEdit = document.getElementById("botonEditar");
 
-botoEdit.addEventListener('click', () => { modificarTasca(idActual) });
+
+botoEdit.addEventListener('click', () => { 
+    modificarTasca(idActual, numeroPos) });
 
 function llistarResponsables() {
 
@@ -234,20 +237,28 @@ function ObtenirDadesForm() {
 /// AQUI COMENÇA LA PART DE TASQUES
 
 function pintarLlistaTasques(tasques) {
-    llistatTasques.innerHTML = "";
-    const divCardElementall = document.createElement("div");
 
+    llistatTasques.innerHTML = "<br>";
+    llistatTasquesDoing.innerHTML = "<br>";
+    llistatTasquesDone.innerHTML = "<br>";
+    const divCardElementall = document.createElement("div");
+    var tarea = 1;
     tasques.forEach((actual) => {
         console.log(actual._id);
 
+        tarea += 1;
+        let pos = actual.posicion;
         // Caixa tasca
         const divCardElement = document.createElement("div");
-        divCardElement.setAttribute("id","tarea");
+        divCardElement.setAttribute("id", tarea );
+        divCardElement.setAttribute("value", actual._id );
+        divCardElement.setAttribute("posicion",pos);
         divCardElement.setAttribute("draggable","true");
         divCardElement.setAttribute("ondragstart","onDragStart(event)");
         divCardElement.classList.add("card");
         divCardElement.classList.add("text-bg-" + actual.color);
         divCardElement.classList.add("mb-3");
+        divCardElement.classList.add("tarea");
 
         // card-body (conte titol, botons, y descripcio)
 
@@ -297,6 +308,8 @@ function pintarLlistaTasques(tasques) {
         editBtn.setAttribute("data-bs-target","#editModal");
         editBtn.addEventListener("click",() => {
                 idActual = actual._id;
+                numeroPos = actual.posicion;
+                console.log("pos" + numeroPos);
             });
         editBtn.setAttribute("value",actual._id);
         editBtn.innerHTML = "<i class='fa-regular fa-pen-to-square' aria-label='edit'></i>";
@@ -390,10 +403,35 @@ function pintarLlistaTasques(tasques) {
 
 
 
-        divCardElementall.append(divCardElement);
+        divCardElementall.append(divCardElement);/////esto no se lo que hace
 
-        llistatTasques.appendChild(divCardElement);
+        if (actual.posicion == "2")
+        {
+            llistatTasquesDoing.appendChild(divCardElement);
+        }
+    
+        if (actual.posicion == "3")
+        {
+            llistatTasquesDone.appendChild(divCardElement);
+        }
+    
+        if (actual.posicion == "1")
+        {
+            llistatTasques.appendChild(divCardElement);
+        }
 
+
+        
+
+ 
+        
+
+  
+
+
+
+
+        
         // const divBodyElement = document.createElement("div");
         // divBodyElement.classList.add("card-body");
         // const divCenterElement = document.createElement("div");
@@ -514,7 +552,8 @@ function ObtenirDadesFormTasca() {
         "color": color,
         "fecha_creacion": tascaForm.fecha_inicio.value,
         "fecha_finalizacion": tascaForm.fecha_final.value,
-        "responsable": resp
+        "responsable": resp,
+        "posicion": "1"
     }
 
     return tasca;
@@ -547,10 +586,10 @@ function eliminarTasca(idActual) {
 }
 
 //Obte les dades del formulari per editar la tasca
-function ObtenirDadesFormTascaEdit() {
+function ObtenirDadesFormTascaEdit(num) {
     let tascaForm = document.getElementById("formularioEdit");
     let color = "";
-    
+    let pos = num;
 
     var resp = [];
     for(let opcion of document.getElementById('editCampoResponsable').options){
@@ -589,17 +628,18 @@ function ObtenirDadesFormTascaEdit() {
         "color": color,
         "fecha_creacion": tascaForm.fecha_inicio.value,
         "fecha_finalizacion": tascaForm.fecha_final.value,
-        "responsable": resp
+        "responsable": resp,
+        "posicion": pos
     }
 
     return tasca;
 }
 
 //Modificar tasca individual
-function modificarTasca(idActual) {
+function modificarTasca(idActual, num) {
 
 	/*Obtenir dades del formulari*/
-    const tasca = ObtenirDadesFormTascaEdit();
+    const tasca = ObtenirDadesFormTascaEdit(num);
     
 	fetch(BaseUrl2 + "/" + idActual, 
     {
@@ -627,20 +667,97 @@ function modificarTasca(idActual) {
         })
 }
 
+let idtarea = "";
 
-function onDrop(event) {
+function onDrop(event, num) {
+
+
+    
 
     const id = event
     .dataTransfer
-    .getData('text');
+    .getData('text'); 
 
-    const draggableElement = document.getElementById(id);
+    idActual = event
+    .dataTransfer
+    .getData('data-value');
+
+    let draggableElement = document.getElementById(id);
+    document.getElementById(id).setAttribute("posicion" , num);
+
+    const div = document.getElementById(id);
+
+    const titulo = div.querySelector("#tarea-titulo").textContent.trim();
+    const descripcion = div.querySelector(".card-text").textContent.trim();
+    let color = "";
+    if(div.classList.contains("text-bg-warning")){
+        color = "warning";
+    }
+    if(div.classList.contains("text-bg-danger")){
+        color = "danger";
+    }
+    if(div.classList.contains("text-bg-primary")){
+        color = "primary";
+    }
+    if(div.classList.contains("text-bg-info")){
+        color = "info";
+    }
+    if(div.classList.contains("text-bg-secondary")){
+        color = "secondary";
+    } 
+    
+    const fecha_creacion = div.querySelector(".fa-calendar").nextSibling.textContent.trim();
+    const fecha_finalizacion = div.querySelector(".fa-calendar-check").nextSibling.textContent.trim();
+
+
+    const tassca = {
+        "titulo": titulo,
+        "titulo_corto": titulo,
+        "descripcion": descripcion,
+        "color": color,
+        "fecha_creacion": fecha_creacion,
+        "fecha_finalizacion": fecha_finalizacion,
+        "responsable": [],
+        "posicion": num
+    }
+    
+
     const dropzone = event.target;
     dropzone.appendChild(draggableElement);
+
+    
+
+    fetch(BaseUrl2 + "/" + idActual, 
+        {
+            
+            method: "PUT",
+            body: JSON.stringify(tassca),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => {
+                console.log(res);
+                if(res.ok) {
+                    res.json()
+                        .then((res2) => {
+                            llistaTasques = res2;
+                            pintarLlistaTasques(llistaTasques);
+                        })
+                } else {
+                    console.log("Error!")
+                }
+            })
+            .catch((err) => {
+                console.log("Error: ", err);
+            })
 
     event
         .dataTransfer
         .clearData();
+
+        
+
 }
 
 
@@ -649,9 +766,22 @@ function onDragStart(event) {
     .dataTransfer
     .setData('text/plain', event.target.id);
 
+    var value = event.target.getAttribute("value");
+    event.dataTransfer.setData("data-value", value);
+
+    
+    //idtarea = document.getElementById(event.target.id).getAttribute("value");
+
 }
 
 
 function onDragOver(event) {
   event.preventDefault();
 }
+
+
+
+
+    
+
+

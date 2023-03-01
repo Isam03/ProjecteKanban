@@ -82,6 +82,20 @@ module.exports = (app) => {
     //Modifica una verdura
     //PUT al endpoint api/verdures/:id
     //En el Body li pasarem la verdura que volem modificar
+
+    // app.put('/api/tasques/:id', async (req, res) => {
+
+    //     const tasca = await tascaModel.findOne({_id: req.params.id});
+    //     try {
+    //         tasca.posicion = req.body.posicion;
+    //         await tasca.save(); // Això retorna la última verdura.
+    //         const resp = await tascaModel.find({});   // Demano la colecció actualitzada per retornar-la.
+    //         res.status(200).send(resp);
+    //     } catch (error) {
+    //         res.status(500).send(error);
+    //     }
+    // });
+
     app.put('/api/tasques/:id', async (req, res) => {
 
         const tasca = await tascaModel.findOne({_id: req.params.id});
@@ -94,6 +108,7 @@ module.exports = (app) => {
             tasca.fecha_creacion = req.body.fecha_creacion;
             tasca.fecha_finalizacion = req.body.fecha_finalizacion;
             tasca.responsable = req.body.responsable;
+            tasca.posicion = req.body.posicion;
             await tasca.save(); // Això retorna la última verdura.
             const resp = await tascaModel.find({});   // Demano la colecció actualitzada per retornar-la.
             res.status(200).send(resp);
